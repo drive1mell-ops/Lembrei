@@ -562,7 +562,6 @@
 if ("Notification" in window) {
   Notification.requestPermission();
 }
-
 function enviarNotificacao(titulo, mensagem) {
   if (Notification.permission === "granted") {
     new Notification(titulo, {
@@ -571,6 +570,11 @@ function enviarNotificacao(titulo, mensagem) {
     });
   }
 }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker registrado"))
+    .catch(err => console.log("Erro:", err));
+}    
   </script>
 </body>
 </html>
