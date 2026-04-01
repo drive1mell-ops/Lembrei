@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lembrei ✦</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- =====================================================
+    PARTE 1: CSS (Estilo Visual)
+    Aqui definimos como o app vai parecer:
+    cores, tamanhos, espaçamentos, animações, etc.
+  ====================================================== -->
+  <style>
+
+    /* --- Variáveis de cor ---
+       Pense nisso como uma "paleta" que podemos reusar em todo o CSS. */
+    :root {
+      --roxo:        #8B5CF6;
+      --roxo-claro:  #EDE9FE;
+      --roxo-hover:  #7C3AED;
+      --menta:       #34D399;
+      --menta-hover: #10B981;
+      --texto:       #1F1235;
+      --texto-suave: #6B7280;
+      --fundo:       #FFFFFF;
+      --borda:       #E5E7EB;
+      --risco:       #D1FAE5;
+    }
+
+    /* --- Reset básico ---
+       Remove espaçamentos padrão do navegador para termos controle total. */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --- Corpo da página --- */
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--fundo);
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;    /* centraliza horizontalmente */
+      align-items: flex-start;    /* alinha no topo */
+      padding: 40px 16px 80px;
+    }
+
+    /* --- Cartão principal do app --- */
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 4px 40px rgba(139,92,246,.10), 0 1px 6px rgba(0,0,0,.04);
+      overflow: hidden;
+    }
+
+    /* --- Cabeçalho roxo no topo --- */
+    .header {
+      background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+      padding: 36px 32px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decoração de fundo do header */
+    .header::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,.08);
+      border-radius: 50%;
+      top: -60px;
+      right: -40px;
+    }
+
+    .header-titulo {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      position: relative;
+    }
+
+    .header-subtitulo {
+      font-size: 14px;
+      color: rgba(255,255,255,.75);
+      margin-top: 4px;
+      font-weight: 600;
+      position: relative;
+    }
+
+    /* Contador de tarefas pendentes */
+    .contador {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.18);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 700;
+      margin-top: 14px;
+      position: relative;
+    }
+
+    /* --- Corpo do app (abaixo do header) --- */
+    .corpo {
+      padding: 28px 28px 32px;
+    }
+
+    /* --- Área de adicionar tarefas --- */
+    .form-adicionar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    /* Campo de texto */
+    .input-tarefa {
+      flex: 1;                      /* ocupa todo o espaço disponível */
+      border: 2px solid var(--borda);
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--texto);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      background: #FAFAFA;
+    }
+
+    /* Efeito ao clicar no campo */
+    .input-tarefa:focus {
+      border-color: var(--roxo);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(139,92,246,.12);
+    }
+
+    .input-tarefa::placeholder {
+      color: #C4C4C4;
+      font-weight: 600;
+    }
+
+    /* Botão "Adicionar" */
+    .btn-adicionar {
+      background: var(--roxo);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-size: 22px;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .btn-adicionar:hover  { background: var(--roxo-hover); }
+    .btn-adicionar:active { transform: scale(.95); }
+
+    /* --- Separador de seção --- */
+    .secao-titulo {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--texto-suave);
+      margin-bottom: 12px;
+    }
+
+    /* --- Lista de tarefas --- */
+    .lista {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Cada item da lista */
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #FAFAFA;
+      border: 1.5px solid var(--borda);
+      border-radius: 16px;
+      padding: 16px 18px;
+      transition: border-color .2s, background .2s, opacity .3s;
+      animation: entrar .3s ease;  /* animação ao aparecer */
+    }
+
+    /* Animação de entrada de um item novo */
+    @keyframes entrar {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* Item concluído */
+    .item.concluido {
+      background: var(--risco);
+      border-color: #A7F3D0;
+      opacity: .75;
+    }
+
+    /* Checkbox personalizado (substitui o quadradinho feio do browser) */
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 2px solid var(--borda);
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background .2s, border-color .2s;
+      font-size: 13px;
+    }
+
+    /* Checkbox quando a tarefa está concluída */
+    .item.concluido .checkbox {
+      background: var(--menta);
+      border-color: var(--menta);
+      color: #fff;
+    }
+
+    /* Texto da tarefa */
+    .texto-tarefa {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--texto);
+      transition: color .2s;
+      word-break: break-word;
+    }
+
+    /* Texto riscado quando concluída */
+    .item.concluido .texto-tarefa {
+      text-decoration: line-through;
+      color: var(--texto-suave);
+    }
+
+    /* Botão de apagar (x) */
+    .btn-apagar {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #D1D5DB;
+      transition: color .2s, transform .15s;
+      flex-shrink: 0;
+      padding: 4px;
+      border-radius: 8px;
+      line-height: 1;
+    }
+
+    .btn-apagar:hover {
+      color: #EF4444;
+      transform: scale(1.2);
+    }
+
+    /* --- Mensagem quando não há tarefas --- */
+    .vazio {
+      text-align: center;
+      padding: 32px 0;
+      color: var(--texto-suave);
+    }
+
+    .vazio-emoji {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .vazio-texto {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    /* --- Botão "Limpar concluídas" --- */
+    .btn-limpar {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      background: none;
+      border: 2px solid var(--borda);
+      border-radius: 14px;
+      padding: 13px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--texto-suave);
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+
+    .btn-limpar:hover {
+      border-color: #FCA5A5;
+      color: #EF4444;
+      background: #FFF5F5;
+    }
+
+    /* Esconde o botão de limpar quando não há concluídas */
+    .btn-limpar.oculto { display: none; }
+
+  </style>
+</head>
+<link rel="manifest" href="manifest.json">
+
+<body>
+
+  <!-- =====================================================
+    PARTE 2: HTML (Estrutura)
+    Aqui definimos os elementos visuais da página:
+    textos, botões, campos, listas, etc.
+    Pense nisso como o "esqueleto" do app.
+  ====================================================== -->
+
+  <div class="card">
+
+    <!-- Cabeçalho -->
+    <div class="header">
+      <div class="header-titulo">✦ Lembrei</div>
+      <div class="header-subtitulo">Suas tarefas do dia</div>
+      <div class="contador">
+        <span>📋</span>
+        <span id="texto-contador">0 pendentes</span>
+      </div>
+    </div>
+
+    <!-- Corpo -->
+    <div class="corpo">
+
+      <!-- Formulário para adicionar tarefa -->
+      <div class="form-adicionar">
+        <input
+          class="input-tarefa"
+          id="input-tarefa"
+          type="text"
+          placeholder="O que você precisa fazer?"
+          maxlength="120"
+        />
+        <button class="btn-adicionar" id="btn-adicionar" title="Adicionar tarefa">
+          ＋
+        </button>
+      </div>
+
+      <!-- Título da seção -->
+      <div class="secao-titulo">Minhas tarefas</div>
+
+      <!-- Lista de tarefas (preenchida pelo JavaScript) -->
+      <ul class="lista" id="lista-tarefas"></ul>
+
+      <!-- Botão para limpar concluídas -->
+      <button class="btn-limpar oculto" id="btn-limpar">
+        🗑 Remover concluídas
+      </button>
+
+    </div>
+  </div>
+
+  <!-- =====================================================
+    PARTE 3: JAVASCRIPT (Comportamento)
+    Aqui definimos o que acontece quando o usuário
+    interage com o app: adicionar, concluir, apagar tarefas,
+    e salvar/carregar do localStorage.
+  ====================================================== -->
+  <script>
+
+    // ── 1. REFERÊNCIAS AOS ELEMENTOS HTML ──────────────────
+    // Guardamos cada elemento importante numa variável
+    // para não precisar buscá-lo toda hora no HTML.
+
+    const inputTarefa   = document.getElementById('input-tarefa');
+    const btnAdicionar  = document.getElementById('btn-adicionar');
+    const listaTarefas  = document.getElementById('lista-tarefas');
+    const textoContador = document.getElementById('texto-contador');
+    const btnLimpar     = document.getElementById('btn-limpar');
+
+
+    // ── 2. CARREGAR TAREFAS SALVAS ──────────────────────────
+    // O localStorage guarda dados no navegador do usuário.
+    // Quando o app abre, carregamos as tarefas salvas anteriormente.
+
+    // Função: carrega o array de tarefas do localStorage.
+    // Se não houver nada salvo, retorna uma lista vazia [].
+    function carregarTarefas() {
+      const salvas = localStorage.getItem('lembrei-tarefas');
+      return salvas ? JSON.parse(salvas) : [];
+    }
+
+    // Função: salva o array de tarefas no localStorage.
+    function salvarTarefas(tarefas) {
+      localStorage.setItem('lembrei-tarefas', JSON.stringify(tarefas));
+    }
+
+    // Variável global que guarda todas as tarefas em memória.
+    let tarefas = carregarTarefas();
+
+
+    // ── 3. RENDERIZAR A LISTA NA TELA ───────────────────────
+    // Essa função apaga tudo da lista e redesenha do zero
+    // com base no array 'tarefas'.
+
+    function renderizar() {
+
+      // Limpa a lista atual
+      listaTarefas.innerHTML = '';
+
+      // Se não há tarefas, mostra mensagem de lista vazia
+      if (tarefas.length === 0) {
+        listaTarefas.innerHTML = `
+          <li class="vazio">
+            <span class="vazio-emoji">🌿</span>
+            <span class="vazio-texto">Nenhuma tarefa ainda.<br>Adicione a primeira acima!</span>
+          </li>`;
+        btnLimpar.classList.add('oculto');
+        atualizarContador();
+        return;
+      }
+
+      // Para cada tarefa no array, cria um <li> (item de lista) no HTML
+      tarefas.forEach(function(tarefa, indice) {
+
+        const item = document.createElement('li');      // cria o elemento
+        item.className = 'item' + (tarefa.concluida ? ' concluido' : '');
+
+        item.innerHTML = `
+          <div class="checkbox" data-indice="${indice}" title="Marcar como concluída">
+            ${tarefa.concluida ? '✓' : ''}
+          </div>
+          <span class="texto-tarefa">${escaparHTML(tarefa.texto)}</span>
+          <button class="btn-apagar" data-indice="${indice}" title="Apagar tarefa">✕</button>
+        `;
+
+        listaTarefas.appendChild(item);   // adiciona à lista no HTML
+      });
+
+      // Mostra o botão de limpar se houver alguma concluída
+      const temConcluidas = tarefas.some(t => t.concluida);
+      btnLimpar.classList.toggle('oculto', !temConcluidas);
+
+      atualizarContador();
+    }
+
+
+    // ── 4. CONTADOR DE PENDENTES ────────────────────────────
+    function atualizarContador() {
+      const pendentes = tarefas.filter(t => !t.concluida).length;
+      textoContador.textContent = pendentes === 1
+        ? '1 pendente'
+        : pendentes + ' pendentes';
+    }
+
+
+    // ── 5. ADICIONAR NOVA TAREFA ────────────────────────────
+    function adicionarTarefa() {
+      const texto = inputTarefa.value.trim();  // remove espaços extras
+
+      // Se o campo estiver vazio, não faz nada
+      if (!texto) {
+        inputTarefa.focus();
+        enviarNotificacao("Nova tarefa 💜", texto);
+        return;
+      }
+
+      // Cria um objeto representando a nova tarefa
+      const novaTarefa = {
+        id:        Date.now(),    // ID único baseado no horário atual
+        texto:     texto,
+        concluida: false
+      };
+
+      tarefas.unshift(novaTarefa);  // adiciona no início da lista
+      salvarTarefas(tarefas);
+      renderizar();
+
+      inputTarefa.value = '';       // limpa o campo de texto
+      inputTarefa.focus();          // devolve o foco ao campo
+    }
+
+
+    // ── 6. ALTERNAR CONCLUSÃO DA TAREFA ────────────────────
+    function alternarConclusao(indice) {
+      tarefas[indice].concluida = !tarefas[indice].concluida;  // inverte true/false
+      salvarTarefas(tarefas);
+      renderizar();
+    }
+
+
+    // ── 7. APAGAR UMA TAREFA ────────────────────────────────
+    function apagarTarefa(indice) {
+      tarefas.splice(indice, 1);  // remove 1 item na posição 'indice'
+      salvarTarefas(tarefas);
+      renderizar();
+    }
+
+
+    // ── 8. LIMPAR TODAS AS CONCLUÍDAS ───────────────────────
+    function limparConcluidas() {
+      tarefas = tarefas.filter(t => !t.concluida);  // mantém só as pendentes
+      salvarTarefas(tarefas);
+      renderizar();
+    }
+
+
+    // ── 9. SEGURANÇA: ESCAPAR HTML ──────────────────────────
+    // Impede que um usuário injete código HTML malicioso no texto.
+    function escaparHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+
+    // ── 10. EVENTOS ─────────────────────────────────────────
+    // Aqui "escutamos" as ações do usuário e chamamos as funções certas.
+
+    // Clique no botão "+"
+    btnAdicionar.addEventListener('click', adicionarTarefa);
+
+    // Pressionar Enter no campo de texto
+    inputTarefa.addEventListener('keydown', function(evento) {
+      if (evento.key === 'Enter') adicionarTarefa();
+    });
+
+    // Clique em qualquer lugar da lista (delegação de eventos)
+    listaTarefas.addEventListener('click', function(evento) {
+      const alvo = evento.target;
+
+      // Clicou no checkbox?
+      if (alvo.classList.contains('checkbox')) {
+        alternarConclusao(Number(alvo.dataset.indice));
+      }
+
+      // Clicou no botão de apagar?
+      if (alvo.classList.contains('btn-apagar')) {
+        apagarTarefa(Number(alvo.dataset.indice));
+      }
+    });
+
+    // Clique em "Remover concluídas"
+    btnLimpar.addEventListener('click', limparConcluidas);
+
+
+    // ── 11. INICIAR O APP ────────────────────────────────────
+    // Ao carregar a página, renderiza as tarefas salvas.
+    renderizar();
+// Pedir permissão para notificações
+if ("Notification" in window) {
+  Notification.requestPermission();
+}
+
+function enviarNotificacao(titulo, mensagem) {
+  if (Notification.permission === "granted") {
+    new Notification(titulo, {
+      body: mensagem,
+      icon: "https://cdn-icons-png.flaticon.com/512/1827/1827392.png"
+    });
+  }
+}
+  </script>
+</body>
+</html>
