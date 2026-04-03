@@ -328,7 +328,21 @@
   font-weight: 700;
   box-shadow: 0 10px 25px rgba(139,92,246,.2);
 }
+.categorias {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
 
+.categoria {
+  flex: 1;
+  background: #F3F4F6;
+  padding: 14px;
+  border-radius: 16px;
+  text-align: center;
+  font-weight: 700;
+  color: #1F1235;
+}
   </style>
 </head>
 <link rel="manifest" href="manifest.json">
@@ -362,6 +376,11 @@
 
     <!-- Corpo -->
     <div class="corpo">
+      <div class="categorias">
+  <div class="categoria">🙏 Oração</div>
+  <div class="categoria">📖 Estudo</div>
+  <div class="categoria">💧 Rotina</div>
+      </div>
 
       <!-- Formulário para adicionar tarefa -->
       <div class="form-adicionar">
