@@ -312,6 +312,22 @@
 
     /* Esconde o botão de limpar quando não há concluídas */
     .btn-limpar.oculto { display: none; }
+    .carrossel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 16px 0;
+}
+
+.card-carrossel {
+  min-width: 240px;
+  background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+  color: white;
+  padding: 20px;
+  border-radius: 18px;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(139,92,246,.2);
+}
 
   </style>
 </head>
@@ -336,6 +352,11 @@
         <span>📋</span>
         <span id="texto-contador">0 pendentes</span>
       </div>
+    </div>
+    <div class="carrossel">
+  <div class="card-carrossel">✨ Foque no seu propósito hoje</div>
+  <div class="card-carrossel">🙏 Não esqueça de orar</div>
+  <div class="card-carrossel">📖 Leia algo que te edifique</div>
     </div>
 
     <!-- Corpo -->
